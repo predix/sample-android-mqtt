@@ -1,5 +1,7 @@
 package com.example.accelerometer;
 
+import com.example.accelerometer.mqtt.Publisher;
+
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -11,12 +13,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ConnectedActivity extends Activity implements SensorEventListener {
 
 	private SensorManager senSensorManager;
 	private Sensor senAccelerometer;
-	
+
 	private long lastUpdate;
 
 	private static final String TAG = ConnectedActivity.class.getName();
@@ -63,18 +66,26 @@ public class ConnectedActivity extends Activity implements SensorEventListener {
 		if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			float y = sensorEvent.values[1];
 			long curTime = System.currentTimeMillis();
-	        if ((curTime - lastUpdate) > 500) {
-	        	Log.v(TAG, "y pos: " + y);
-	            lastUpdate = curTime;
-	            TextView ypos = (TextView)findViewById(R.id.ypos);
+			if ((curTime - lastUpdate) > 500) {
+				Log.v(TAG, "y pos: " + y);
+				lastUpdate = curTime;
+				TextView ypos = (TextView) findViewById(R.id.ypos);
 				ypos.setText(String.valueOf(y));
-	        }			
+				Publisher.getPublisher().publish(y);
+			}
 		}
 	}
-	
+
 	public void disconnect(View view) {
-        Log.i(TAG, "Disconnect clicked");
-        finish();
-    }
+		Log.i(TAG, "Disconnect clicked");
+		try {
+			Publisher.getPublisher().disconnect();
+		} catch (Exception e) {
+			Log.e(TAG, "Error when disconnecting", e);
+			Toast.makeText(getApplicationContext(), "Error in disconnecting",
+					Toast.LENGTH_SHORT).show();
+		}
+		finish();
+	}
 
 }

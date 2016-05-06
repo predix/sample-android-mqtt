@@ -1,5 +1,7 @@
 package com.example.accelerometer;
 
+import com.example.accelerometer.mqtt.Publisher;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
@@ -31,8 +34,19 @@ public class MainActivity extends Activity {
         EditText port = (EditText)findViewById(R.id.port);
         Log.i(TAG, "Host name is " + hostName.getText());
         Log.i(TAG, "Port is " + port.getText());
-        Intent intent = new Intent(this, ConnectedActivity.class);
-        startActivity(intent);
+        String host = hostName.getText().toString();
+        String portNum = port.getText().toString();
+        Publisher p = Publisher.getPublisher();
+        try {
+			p.connect(host, Integer.valueOf(portNum), this);
+			Intent intent = new Intent(this, ConnectedActivity.class);
+	        startActivity(intent);
+		} catch (Exception e) {
+			Log.e(TAG, "Error in connecting", e);
+			Toast.makeText(getApplicationContext(), "Error in connecting",
+					Toast.LENGTH_SHORT).show();
+		} 
+        
     }
 
 }
