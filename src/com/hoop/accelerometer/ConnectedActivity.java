@@ -1,6 +1,4 @@
-package com.example.accelerometer;
-
-import com.example.accelerometer.mqtt.Publisher;
+package com.hoop.accelerometer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +12,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hoop.accelerometer.mqtt.Publisher;
 
 public class ConnectedActivity extends Activity implements SensorEventListener {
 

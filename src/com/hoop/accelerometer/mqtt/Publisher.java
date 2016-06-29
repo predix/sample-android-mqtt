@@ -1,4 +1,4 @@
-package com.example.accelerometer.mqtt;
+package com.hoop.accelerometer.mqtt;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
